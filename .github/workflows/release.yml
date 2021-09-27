@@ -3,9 +3,74 @@ name: Release Charts
 on:
   push:
     branches:
-      - charts
+      - fix-helm-chart-release-chart-dir
 
 jobs:
+  pushToCharts:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: fix-helm-chart-release-chart-dir  # later needs to be "main"
+          path: main
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: charts
+          path: charts
+
+      - name: Configure Git main
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+        working-directory: main
+
+      - name: Configure Git charts
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+        working-directory: charts
+
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.4.0
+
+      - name: copy chart to branch charts
+        run: |
+          pwd
+          ls -all
+          mkdir charts/charts && mkdir charts/charts/docker-hub-rate-limit-exporter-chart
+          rm -rfv charts/charts/docker-hub-rate-limit-exporter-chart/**
+          ls charts -all
+          ls charts/charts/docker-hub-rate-limit-exporter-chart -all
+          ls main -all
+          ls main/chart -all
+          cp -rv main/chart/** charts/charts/docker-hub-rate-limit-exporter-chart
+          cd charts
+          ls -all
+          cd charts/docker-hub-rate-limit-exporter-chart
+          ls -all
+
+      - name: Extract chart version
+        run: |
+          helm show chart charts/charts/docker-hub-rate-limit-exporter-chart > chart-infos.txt
+          version=$( cat ./chart-infos.txt | egrep "(version)(:)(\s)([0-9]+.[0-9]+.[0-9]+)" | egrep "([0-9]+.[0-9]+.[0-9]+)" -o)
+          echo $version
+          echo "CHART_VERSION=$version" >> $GITHUB_ENV
+
+      - name: push to remote charts
+        run: |
+          git status
+          git add charts
+          git commit -m"bump docker-hub-rate-limit-exporter-chart to version ${{ env.CHART_VERSION }}"
+          git push
+        working-directory: charts
+
   release:
     runs-on: ubuntu-latest
     steps:

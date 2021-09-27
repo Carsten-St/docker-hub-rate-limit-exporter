@@ -32,6 +32,13 @@ jobs:
         run: |
           pwd
           ls -all
+          cd /docker-hub-rate-limit-exporter
+          pwd
+          ls -all
+          cd ..
+          cd ..
+          pwd
+          ls -all
           cd ..
           pwd
           ls -all
@@ -42,6 +49,6 @@ jobs:
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.1.0
         with:
-          charts_dir: .
+          charts_dir: /docker-hub-rate-limit-exporter
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

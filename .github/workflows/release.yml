@@ -32,7 +32,7 @@ jobs:
         run: |
           pwd
           ls -all
-          cd /docker-hub-rate-limit-exporter
+          cd ./docker-hub-rate-limit-exporter
           pwd
           ls -all
           cd ..

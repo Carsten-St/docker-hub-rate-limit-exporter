@@ -28,8 +28,8 @@ jobs:
 
       - name: Copy chart in charts/docker-hub-rate-limit-exporter-chart
         run: |
-          mkdir charts/docker-hub-rate-limit-exporter-chart
-          copy -rv chart charts/docker-hub-rate-limit-exporter-chart
+          mkdir charts && mkdir charts/docker-hub-rate-limit-exporter-chart
+          cp -rv chart/** charts/docker-hub-rate-limit-exporter-chart
           ls -all
           cd charts/docker-hub-rate-limit-exporter-chart
           ls -all

@@ -26,24 +26,17 @@ jobs:
         with:
           version: v3.4.0
 
-      - name: Check dir
+      - name: Copy chart in charts/docker-hub-rate-limit-exporter-chart
         run: |
-          pwd
+          mkdir charts/docker-hub-rate-limit-exporter-chart
+          copy -rv chart charts/docker-hub-rate-limit-exporter-chart
           ls -all
-          cd ..
-          cd ..
-          pwd
+          cd charts/docker-hub-rate-limit-exporter-chart
           ls -all
-          cd ..
-          pwd
-          ls -all
-          cd ..
-          ls -all
-          pwd
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.2.1
         with:
-          charts_dir: ./chart/Chart.yaml
+          charts_dir: charts
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"

@@ -3,7 +3,7 @@ name: Release Charts
 on:
   push:
     branches:
-      - fix-helm-chart-release-chart-dir
+      - fix-helm-chart-release-chart-dir # later needs to be "main"
 
 jobs:
   pushToCharts:
@@ -43,19 +43,9 @@ jobs:
 
       - name: copy chart to branch charts
         run: |
-          pwd
-          ls -all
           mkdir charts/charts && mkdir charts/charts/docker-hub-rate-limit-exporter-chart
           rm -rfv charts/charts/docker-hub-rate-limit-exporter-chart/**
-          ls charts -all
-          ls charts/charts/docker-hub-rate-limit-exporter-chart -all
-          ls main -all
-          ls main/chart -all
           cp -rv main/chart/** charts/charts/docker-hub-rate-limit-exporter-chart
-          cd charts
-          ls -all
-          cd charts/docker-hub-rate-limit-exporter-chart
-          ls -all
 
       - name: Extract chart version
         run: |

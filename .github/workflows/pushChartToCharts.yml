@@ -62,12 +62,13 @@ jobs:
       - name: Extract chart version
         run: |
           helm show chart charts/charts/docker-hub-rate-limit-exporter-chart > chart-infos.txt
-          version_analyzer=$( cat ./chart-infos.txt | egrep "(version)(:)(\s)([0-9]+.[0-9]+.[0-9]+)" | egrep "([0-9]+.[0-9]+.[0-9]+)" -o)
-          echo $version_analyzer
-          echo "CHART_VERSION_ANALYZER=$version_analyzer" >> $GITHUB_ENV
+          version=$( cat ./chart-infos.txt | egrep "(version)(:)(\s)([0-9]+.[0-9]+.[0-9]+)" | egrep "([0-9]+.[0-9]+.[0-9]+)" -o)
+          echo $version
+          echo "CHART_VERSION=$version" >> $GITHUB_ENV
 
       - name: push to remote charts
         run: |
-          git commit -am "bump docker-hub-rate-limit-exporter-chart to version ${{ env.CHART_VERSION }}"
+          git status
+          git commit -am"bump docker-hub-rate-limit-exporter-chart to version ${{ env.CHART_VERSION }}"
           git push
         working-directory: charts

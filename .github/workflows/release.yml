@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - charts
+    paths:
+      - 'charts'
 
 jobs:
   release:

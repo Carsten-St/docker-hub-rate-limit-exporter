@@ -7,6 +7,7 @@ on:
 
 jobs:
   pushToCharts:
+    name: Push chart to branch charts
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -72,6 +73,8 @@ jobs:
         working-directory: charts
 
   release:
+    name: Release
+    needs: pushToCharts
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

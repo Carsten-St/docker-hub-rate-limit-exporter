@@ -26,10 +26,17 @@ jobs:
           ref: charts
           path: charts
 
-      - name: Configure Git
+      - name: Configure Git main
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+        working-directory: main
+
+      - name: Configure Git charts
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+        working-directory: charts
 
       - name: Install Helm
         uses: azure/setup-helm@v1

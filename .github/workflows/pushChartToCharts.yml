@@ -69,6 +69,7 @@ jobs:
       - name: push to remote charts
         run: |
           git status
-          git commit -am"bump docker-hub-rate-limit-exporter-chart to version ${{ env.CHART_VERSION }}"
+          git add charts
+          git commit -m"bump docker-hub-rate-limit-exporter-chart to version ${{ env.CHART_VERSION }}"
           git push
         working-directory: charts

@@ -1,0 +1,62 @@
+name: Push chart to branch charts
+
+on:
+  push:
+    branches:
+      - main
+      - fix-helm-chart-release-chart-dir
+    paths:
+      - 'chart/**'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: main
+          path: main
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: charts
+          path: charts
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.4.0
+
+      - name: copy chart to branch charts
+        run: |
+          pwd
+          ls -all
+          mkdir charts/charts && mkdir charts/charts/docker-hub-rate-limit-exporter-chart
+          rm -rfv charts/charts/docker-hub-rate-limit-exporter-chart/**
+          cp -rv main/chart/** charts/charts/docker-hub-rate-limit-exporter-chart
+          cd charts
+          ls -all
+          cd charts/docker-hub-rate-limit-exporter-chart
+          ls -all
+
+      - name: Extract chart version
+        run: |
+          helm show chart charts/charts/docker-hub-rate-limit-exporter-chart > chart-infos.txt
+          version_analyzer=$( cat ./chart-infos.txt | egrep "(version)(:)(\s)([0-9]+.[0-9]+.[0-9]+)" | egrep "([0-9]+.[0-9]+.[0-9]+)" -o)
+          echo $version_analyzer
+          echo "CHART_VERSION_ANALYZER=$version_analyzer" >> $GITHUB_ENV
+
+      - name: push to remote charts
+        run: |
+          git commit -am "bump docker-hub-rate-limit-exporter-chart to version ${{ env.CHART_VERSION }}"
+          git push
+        working-directory: charts

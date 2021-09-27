@@ -50,7 +50,7 @@ jobs:
           mkdir charts/charts && mkdir charts/charts/docker-hub-rate-limit-exporter-chart
           rm -rfv charts/charts/docker-hub-rate-limit-exporter-chart/**
           ls charts -all
-          ls charts/docker-hub-rate-limit-exporter-chart -all
+          ls charts/charts/docker-hub-rate-limit-exporter-chart -all
           ls main -all
           ls main/chart -all
           cp -rv main/chart/** charts/charts/docker-hub-rate-limit-exporter-chart
